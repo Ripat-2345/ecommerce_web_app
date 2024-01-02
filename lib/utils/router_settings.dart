@@ -1,10 +1,11 @@
-import 'package:ecommerce_web_app/pages/auth/change_password.dart';
+import 'package:ecommerce_web_app/pages/auth/change_password_page.dart';
+import 'package:ecommerce_web_app/pages/auth/forgot_password_page.dart';
 import 'package:ecommerce_web_app/pages/auth/login_page.dart';
 import 'package:ecommerce_web_app/pages/auth/register_page.dart';
 import 'package:ecommerce_web_app/pages/home/home_page.dart';
-import 'package:ecommerce_web_app/pages/profile/profile_page.dart';
 import 'package:ecommerce_web_app/pages/not_found_page.dart';
 import 'package:ecommerce_web_app/pages/product/product_page.dart';
+import 'package:ecommerce_web_app/widgets/custom_sidebar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,10 +25,17 @@ final List<RouteBase> _listRoutes = [
     },
   ),
   GoRoute(
+    path: 'forgot-password',
+    name: 'forgot-password',
+    builder: (context, state) {
+      return const ForgotPasswordPage();
+    },
+  ),
+  GoRoute(
     path: 'change-password/:token',
     name: 'change-password',
     builder: (context, state) {
-      return ChangePassword(
+      return ChangePasswordPage(
         token: state.pathParameters['token'],
       );
     },
@@ -40,17 +48,19 @@ final List<RouteBase> _listRoutes = [
     },
   ),
   GoRoute(
-    path: 'profile',
-    name: 'profile',
-    builder: (context, state) {
-      return const ProfilePage();
-    },
-  ),
-  GoRoute(
     path: 'product',
     name: 'product',
     builder: (context, state) {
       return const ProductPage();
+    },
+  ),
+  GoRoute(
+    path: 'dashboard/:page',
+    name: 'dashboard',
+    builder: (context, state) {
+      return CustomSidebarWidget(
+        page: state.pathParameters['page']!,
+      );
     },
   ),
 ];

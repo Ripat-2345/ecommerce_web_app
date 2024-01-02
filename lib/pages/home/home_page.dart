@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_web_app/utils/screen_size.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
+import 'package:ecommerce_web_app/widgets/custom_product_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_profile_display_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_text_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -97,10 +98,14 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                       GestureDetector(
-                          onTap: () {
-                            context.goNamed('profile');
-                          },
-                          child: const CustomProfileDisplayWidget()),
+                        onTap: () {
+                          context.goNamed(
+                            'dashboard',
+                            pathParameters: {'page': 'market-place'},
+                          );
+                        },
+                        child: const CustomProfileDisplayWidget(),
+                      ),
                     ],
                   ),
                 ),
@@ -179,7 +184,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 100),
-                // todo:
+                // todo: about us
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -234,6 +239,224 @@ class HomePage extends StatelessWidget {
                           )
                         ],
                       )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 100),
+                // todo: special offer
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Special % Offers",
+                        style: TextStyle(
+                          color: whiteColor,
+                          fontSize: 38,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                      CarouselSlider(
+                        items: const [
+                          SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: [
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: [
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: [
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                                SizedBox(width: 50),
+                                CustomProductWidget(),
+                              ],
+                            ),
+                          ),
+                        ],
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          height: 300,
+                          autoPlayAnimationDuration: const Duration(seconds: 3),
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 100),
+                // todo: footer
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 40,
+                  ),
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: screenWidth(context) / 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/logo_icon.png",
+                                      width: 50,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "Ecommerce Web",
+                                      style: TextStyle(
+                                        color: darkBlueColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: screenWidth(context) / 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Our Company",
+                                  style: TextStyle(
+                                    color: darkBlueColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: screenWidth(context) / 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Quick Links",
+                                  style: TextStyle(
+                                    color: darkBlueColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextButtonWidget(
+                                  title: "Home",
+                                  textColor: Colors.black,
+                                  textSize: 18,
+                                  textWeight: FontWeight.w200,
+                                  overlayColor: yellowColor,
+                                  onPressed: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                CustomTextButtonWidget(
+                                  title: "Shop",
+                                  textColor: Colors.black,
+                                  textSize: 18,
+                                  textWeight: FontWeight.w200,
+                                  overlayColor: yellowColor,
+                                  onPressed: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                CustomTextButtonWidget(
+                                  title: "Brands",
+                                  textColor: Colors.black,
+                                  textSize: 18,
+                                  textWeight: FontWeight.w200,
+                                  overlayColor: yellowColor,
+                                  onPressed: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                CustomTextButtonWidget(
+                                  title: "About Us",
+                                  textColor: Colors.black,
+                                  textSize: 18,
+                                  textWeight: FontWeight.w200,
+                                  overlayColor: yellowColor,
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      const Divider(),
+                      const SizedBox(height: 40),
+                      Text(
+                        "Copyright 2024 Ecommerce Web. All Rights Reserved.",
+                        style: TextStyle(
+                          color: darkBlueColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class CartPage extends StatelessWidget {
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget {
           ),
           children: const [
             Center(
-              child: Text("Profile"),
+              child: Text("Cart"),
             ),
           ],
         ),

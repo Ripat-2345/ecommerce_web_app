@@ -124,7 +124,9 @@ class LoginPage extends StatelessWidget {
                                 textColor: darkBlueColor,
                                 textSize: 16,
                                 textWeight: FontWeight.w400,
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.goNamed('forgot-password');
+                                },
                               ),
                             ),
                             const SizedBox(height: 30),
