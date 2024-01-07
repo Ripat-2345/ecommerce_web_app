@@ -41,6 +41,11 @@ dependencies:
   flutter_animate: ^4.3.0
   sidebarx: ^0.16.3
   carousel_slider: ^4.2.1
+  provider: ^6.1.1
+  http: ^1.1.2
+  shared_preferences: ^2.2.2
+  image_picker: ^1.0.6
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:

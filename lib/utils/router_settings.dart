@@ -9,12 +9,35 @@ import 'package:ecommerce_web_app/widgets/custom_sidebar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// Future<List<RouteBase>> isAuthentication() async {
+//   final data = await readFromStorage('authData');
+//   if (data == null) {
+//     return [
+//       GoRoute(
+//         path: 'login',
+//         name: 'login',
+//         builder: (context, state) {
+//           return const LoginPage();
+//         },
+//       ),
+//       GoRoute(
+//         path: 'register',
+//         name: 'register',
+//         builder: (context, state) {
+//           return const RegisterPage();
+//         },
+//       ),
+//     ];
+//   }
+//   return [];
+// }
+
 final List<RouteBase> _listRoutes = [
   GoRoute(
     path: 'login',
     name: 'login',
     builder: (context, state) {
-      return const LoginPage();
+      return LoginPage();
     },
   ),
   GoRoute(
@@ -69,6 +92,7 @@ final GoRouter router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
+      name: 'baseUrl',
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
       },

@@ -1,4 +1,6 @@
+import 'package:ecommerce_web_app/providers/auth_provider.dart';
 import 'package:ecommerce_web_app/utils/screen_size.dart';
+import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_text_button_widget.dart';
@@ -6,12 +8,43 @@ import 'package:ecommerce_web_app/widgets/custom_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final nameController = TextEditingController();
+
+  final usernameController = TextEditingController();
+
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
+  XFile? avatar;
+
+  bool isValidatedFormRegister(BuildContext context) {
+    if (nameController.text.isEmpty ||
+        usernameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty) {
+      snackBarInfo(context, "Field tidak boleh kosong!");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthProvider>(context);
+
     return Title(
       title: "Register",
       color: whiteColor,
@@ -83,29 +116,68 @@ class RegisterPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             // todo: email field
-                            const CustomTextFieldWidget(
+                            CustomTextFieldWidget(
+                              controller: nameController,
                               title: "Your Name",
                             ),
                             const SizedBox(height: 20),
                             // todo: username field
-                            const CustomTextFieldWidget(
+                            CustomTextFieldWidget(
+                              controller: usernameController,
                               title: "Username",
                             ),
                             const SizedBox(height: 20),
                             // todo: email field
-                            const CustomTextFieldWidget(
+                            CustomTextFieldWidget(
+                              controller: emailController,
                               title: "Email",
                             ),
                             const SizedBox(height: 20),
                             // todo: password field
-                            const CustomTextFieldWidget(
+                            CustomTextFieldWidget(
+                              controller: passwordController,
+                              obscureText: true,
                               title: "Password",
                             ),
                             const SizedBox(height: 20),
                             // todo: avatar field
-                            const CustomTextFieldWidget(
-                              title: "Your Avatar",
+                            Flex(
+                              direction: Axis.horizontal,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                avatar != null
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.network(
+                                          avatar!.path,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                                const SizedBox(width: 50),
+                                CustomFilledButtonWidget(
+                                  title: "Upload Avatar",
+                                  widthButton: 165,
+                                  heightButton: 40,
+                                  backgroundButton: yellowColor,
+                                  textButtonColor: darkBlueColor,
+                                  textButtonSize: 18,
+                                  textButtonFontWeight: FontWeight.w600,
+                                  onPressed: () async {
+                                    var image = await takeImageFromDevice();
+                                    setState(() {
+                                      avatar = image;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
+                            // const CustomTextFieldWidget(
+                            //   title: "Your Avatar",
+                            // ),
                             const SizedBox(height: 30),
                             Align(
                               alignment: Alignment.centerRight,
@@ -117,7 +189,16 @@ class RegisterPage extends StatelessWidget {
                                 textButtonSize: 16,
                                 textButtonFontWeight: FontWeight.w500,
                                 title: "Registration",
-                                onPressed: () => context.goNamed('login'),
+                                onPressed: () async {
+                                  await authProvider.register(
+                                    context: context,
+                                    name: nameController.text,
+                                    username: usernameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    avatar: avatar,
+                                  );
+                                },
                               ),
                             ),
                             const SizedBox(height: 10),

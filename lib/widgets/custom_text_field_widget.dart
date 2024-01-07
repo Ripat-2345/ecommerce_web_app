@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 
 class CustomTextFieldWidget extends StatelessWidget {
   final String title;
-  const CustomTextFieldWidget({super.key, required this.title});
+  final bool obscureText;
+  final TextEditingController? controller;
+  const CustomTextFieldWidget({
+    super.key,
+    required this.title,
+    this.obscureText = false,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +33,15 @@ class CustomTextFieldWidget extends StatelessWidget {
               ? 400
               : double.infinity,
           child: TextField(
+            controller: controller,
+            obscureText: obscureText,
             decoration: InputDecoration(
               filled: true,
               fillColor: whiteColor,
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 8,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
                 borderSide: BorderSide(color: blueColor),

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_web_app/utils/screen_size.dart';
+import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_product_widget.dart';
@@ -8,8 +11,31 @@ import 'package:ecommerce_web_app/widgets/custom_text_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Map<String, dynamic>? authData;
+
+  void _loadAuthDataFromStorage() async {
+    final data = await readFromStorage('authData');
+
+    setState(() {
+      authData = jsonDecode(data!);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAuthDataFromStorage();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,15 +123,48 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          context.goNamed(
-                            'dashboard',
-                            pathParameters: {'page': 'market-place'},
-                          );
-                        },
-                        child: const CustomProfileDisplayWidget(),
-                      ),
+                      authData != null
+                          ? GestureDetector(
+                              onTap: () {
+                                context.goNamed(
+                                  'dashboard',
+                                  pathParameters: {'page': 'market-place'},
+                                );
+                              },
+                              child: CustomProfileDisplayWidget(
+                                username: authData!['data']['username'],
+                                pictUrl: authData!['data']['avatar'],
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                CustomFilledButtonWidget(
+                                  title: 'Login',
+                                  widthButton: 100,
+                                  heightButton: 40,
+                                  backgroundButton: yellowColor,
+                                  textButtonColor: darkBlueColor,
+                                  textButtonSize: 16,
+                                  textButtonFontWeight: FontWeight.w500,
+                                  onPressed: () {
+                                    context.goNamed('login');
+                                  },
+                                ),
+                                const SizedBox(width: 10),
+                                CustomFilledButtonWidget(
+                                  title: 'Register',
+                                  widthButton: 110,
+                                  heightButton: 40,
+                                  backgroundButton: blueColor,
+                                  textButtonColor: yellowColor,
+                                  textButtonSize: 16,
+                                  textButtonFontWeight: FontWeight.w500,
+                                  onPressed: () {
+                                    context.goNamed('register');
+                                  },
+                                )
+                              ],
+                            ),
                     ],
                   ),
                 ),
@@ -311,7 +370,7 @@ class HomePage extends StatelessWidget {
                         ],
                         options: CarouselOptions(
                           autoPlay: true,
-                          height: 300,
+                          height: 310,
                           autoPlayAnimationDuration: const Duration(seconds: 3),
                           scrollDirection: Axis.horizontal,
                         ),

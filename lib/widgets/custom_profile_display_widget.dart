@@ -1,8 +1,15 @@
+import 'package:ecommerce_web_app/utils/shared_values.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:flutter/material.dart';
 
 class CustomProfileDisplayWidget extends StatelessWidget {
-  const CustomProfileDisplayWidget({super.key});
+  final String username;
+  final String pictUrl;
+  const CustomProfileDisplayWidget({
+    super.key,
+    required this.username,
+    required this.pictUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,14 +18,16 @@ class CustomProfileDisplayWidget extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              "Howday, Mika chan",
-              style: TextStyle(
-                color: whiteColor,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            username.isNotEmpty
+                ? Text(
+                    "Howday, $username",
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : const SizedBox(),
             Row(
               children: [
                 Icon(
@@ -45,8 +54,10 @@ class CustomProfileDisplayWidget extends StatelessWidget {
           height: 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            image: const DecorationImage(
-              image: AssetImage("assets/images/user.png"),
+            image: DecorationImage(
+              image: pictUrl.isEmpty
+                  ? const AssetImage("assets/images/user.png") as ImageProvider
+                  : NetworkImage('$baseUrl/$pictUrl'),
             ),
           ),
         ),

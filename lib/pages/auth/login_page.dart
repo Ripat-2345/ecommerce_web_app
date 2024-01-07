@@ -1,4 +1,6 @@
+import 'package:ecommerce_web_app/providers/auth_provider.dart';
 import 'package:ecommerce_web_app/utils/screen_size.dart';
+import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_text_button_widget.dart';
@@ -6,12 +8,25 @@ import 'package:ecommerce_web_app/widgets/custom_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool isValidatedFormLogin(BuildContext context) {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      snackBarInfo(context, "Email & Password tidak boleh kosong!");
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthProvider>(context);
     return Title(
       title: "Login",
       color: whiteColor,
@@ -107,12 +122,15 @@ class LoginPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             // todo: email field
-                            const CustomTextFieldWidget(
+                            CustomTextFieldWidget(
+                              controller: emailController,
                               title: "Your Email",
                             ),
                             const SizedBox(height: 20),
                             // todo: password field
-                            const CustomTextFieldWidget(
+                            CustomTextFieldWidget(
+                              controller: passwordController,
+                              obscureText: true,
                               title: "Password",
                             ),
                             const SizedBox(height: 10),
@@ -133,15 +151,22 @@ class LoginPage extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerRight,
                               child: CustomFilledButtonWidget(
-                                widthButton: 400,
-                                heightButton: 50,
-                                backgroundButton: darkBlueColor,
-                                textButtonColor: whiteColor,
-                                textButtonSize: 16,
-                                textButtonFontWeight: FontWeight.w500,
-                                title: "Login",
-                                onPressed: () => context.goNamed('home'),
-                              ),
+                                  widthButton: 400,
+                                  heightButton: 50,
+                                  backgroundButton: darkBlueColor,
+                                  textButtonColor: whiteColor,
+                                  textButtonSize: 16,
+                                  textButtonFontWeight: FontWeight.w500,
+                                  title: "Login",
+                                  onPressed: () async {
+                                    if (isValidatedFormLogin(context)) {
+                                      await authProvider.login(
+                                        context: context,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                      );
+                                    }
+                                  }),
                             ),
                             const SizedBox(height: 10),
                             Align(
