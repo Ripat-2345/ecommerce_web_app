@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_web_app/providers/product_provider.dart';
 import 'package:ecommerce_web_app/utils/screen_size.dart';
+import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
@@ -21,6 +24,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List? dataProducts;
+
   Map<String, dynamic>? authData;
 
   void _loadAuthDataFromStorage() async {
@@ -36,7 +41,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProductProvider>(context, listen: false)
-          .getProducts(context: context);
+          .getProducts(context: context)
+          .then((value) {
+        setState(() {
+          dataProducts = value!.dataProducts;
+        });
+      });
       _loadAuthDataFromStorage();
     });
   }
@@ -96,11 +106,19 @@ class _HomePageState extends State<HomePage> {
                             textSize: 16,
                             textWeight: FontWeight.w200,
                             overlayColor: blueColor,
-                            onPressed: () {
-                              context.goNamed(
-                                'dashboard',
-                                pathParameters: {'page': 'market-place'},
-                              );
+                            onPressed: () async {
+                              final data = await readFromStorage('authData');
+                              if (data != null) {
+                                context.goNamed(
+                                  'dashboard',
+                                  pathParameters: {'page': 'market-place'},
+                                );
+                              } else {
+                                snackBarInfo(
+                                  context,
+                                  "Anda Harus Login Terlebih Dahulu!",
+                                );
+                              }
                             },
                           ),
                           const SizedBox(width: 20),
@@ -327,59 +345,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 50),
                       CarouselSlider(
-                        items: const [
+                        items: [
                           SizedBox(
                             width: double.infinity,
                             child: Row(
-                              children: [
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                                SizedBox(width: 50),
-                                CustomProductWidget(),
-                              ],
+                              children: dataProducts!.map((data) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: CustomProductWidget(
+                                    productName: data['name'],
+                                    price: data['price'].toString(),
+                                    // description: data['description'],
+                                    productImageUrl: data['picture'],
+                                  ),
+                                );
+                              }).toList(),
+                              // SizedBox(width: 50),
                             ),
                           ),
                         ],
                         options: CarouselOptions(
                           autoPlay: true,
-                          height: 310,
+                          height: 350,
                           autoPlayAnimationDuration: const Duration(seconds: 3),
                           scrollDirection: Axis.horizontal,
                         ),

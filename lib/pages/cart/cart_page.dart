@@ -1,3 +1,4 @@
+import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:flutter/material.dart';
 
 class CartPage extends StatelessWidget {
@@ -14,9 +15,27 @@ class CartPage extends StatelessWidget {
             top: 20,
             right: 20,
           ),
-          children: const [
-            Center(
-              child: Text("Cart"),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: whiteColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'My Carts',
+                    style: TextStyle(
+                      color: darkBlueColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                ],
+              ),
             ),
           ],
         ),

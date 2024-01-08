@@ -13,12 +13,12 @@ import 'package:http/http.dart' as http;
 class ProductProvider with ChangeNotifier {
   Future<ProductModel?> getProducts({BuildContext? context}) async {
     try {
-      final dataUser = await readFromStorage('authData');
-      final token = jsonDecode(dataUser!)['token'];
+      // final dataUser = await readFromStorage('authData');
+      // final token = jsonDecode(dataUser!)['token'];
       final response = await http.get(Uri.parse("$baseUrl/products"), headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
+        // 'Authorization': 'Bearer $token',
       });
       print("status: ${response.statusCode}");
       print("body: ${response.body}");
