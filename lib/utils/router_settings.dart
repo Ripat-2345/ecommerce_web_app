@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:ecommerce_web_app/pages/auth/change_password_page.dart';
 import 'package:ecommerce_web_app/pages/auth/forgot_password_page.dart';
 import 'package:ecommerce_web_app/pages/auth/login_page.dart';
@@ -5,6 +7,7 @@ import 'package:ecommerce_web_app/pages/auth/register_page.dart';
 import 'package:ecommerce_web_app/pages/home/home_page.dart';
 import 'package:ecommerce_web_app/pages/not_found_page.dart';
 import 'package:ecommerce_web_app/pages/product/product_page.dart';
+import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/widgets/custom_sidebar_widget.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +93,14 @@ final List<RouteBase> _listRoutes = [
       return CustomSidebarWidget(
         page: state.pathParameters['page']!,
       );
+    },
+    redirect: (context, state) async {
+      final data = await readFromStorage('authData');
+      if (data == null) {
+        snackBarInfo(context, "Anda Harus Login Terlebih Dahulu!");
+        return "/";
+      }
+      return 'dashboard/:page';
     },
   ),
 ];

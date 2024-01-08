@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_web_app/providers/product_provider.dart';
 import 'package:ecommerce_web_app/utils/screen_size.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
@@ -10,6 +11,7 @@ import 'package:ecommerce_web_app/widgets/custom_profile_display_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_text_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductProvider>(context, listen: false)
+          .getProducts(context: context);
       _loadAuthDataFromStorage();
     });
   }
@@ -92,7 +96,12 @@ class _HomePageState extends State<HomePage> {
                             textSize: 16,
                             textWeight: FontWeight.w200,
                             overlayColor: blueColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              context.goNamed(
+                                'dashboard',
+                                pathParameters: {'page': 'market-place'},
+                              );
+                            },
                           ),
                           const SizedBox(width: 20),
                           CustomTextButtonWidget(
