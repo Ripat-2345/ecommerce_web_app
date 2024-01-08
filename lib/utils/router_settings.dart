@@ -5,32 +5,10 @@ import 'package:ecommerce_web_app/pages/auth/register_page.dart';
 import 'package:ecommerce_web_app/pages/home/home_page.dart';
 import 'package:ecommerce_web_app/pages/not_found_page.dart';
 import 'package:ecommerce_web_app/pages/product/product_page.dart';
+import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/widgets/custom_sidebar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-// Future<List<RouteBase>> isAuthentication() async {
-//   final data = await readFromStorage('authData');
-//   if (data == null) {
-//     return [
-//       GoRoute(
-//         path: 'login',
-//         name: 'login',
-//         builder: (context, state) {
-//           return const LoginPage();
-//         },
-//       ),
-//       GoRoute(
-//         path: 'register',
-//         name: 'register',
-//         builder: (context, state) {
-//           return const RegisterPage();
-//         },
-//       ),
-//     ];
-//   }
-//   return [];
-// }
 
 final List<RouteBase> _listRoutes = [
   GoRoute(
@@ -39,6 +17,13 @@ final List<RouteBase> _listRoutes = [
     builder: (context, state) {
       return LoginPage();
     },
+    redirect: (context, state) async {
+      final data = await readFromStorage('authData');
+      if (data != null) {
+        return "/";
+      }
+      return 'login';
+    },
   ),
   GoRoute(
     path: 'register',
@@ -46,12 +31,26 @@ final List<RouteBase> _listRoutes = [
     builder: (context, state) {
       return const RegisterPage();
     },
+    redirect: (context, state) async {
+      final data = await readFromStorage('authData');
+      if (data != null) {
+        return "/";
+      }
+      return 'register';
+    },
   ),
   GoRoute(
     path: 'forgot-password',
     name: 'forgot-password',
     builder: (context, state) {
       return const ForgotPasswordPage();
+    },
+    redirect: (context, state) async {
+      final data = await readFromStorage('authData');
+      if (data != null) {
+        return "/";
+      }
+      return 'forgot-password';
     },
   ),
   GoRoute(
@@ -61,6 +60,13 @@ final List<RouteBase> _listRoutes = [
       return ChangePasswordPage(
         token: state.pathParameters['token'],
       );
+    },
+    redirect: (context, state) async {
+      final data = await readFromStorage('authData');
+      if (data != null) {
+        return "/";
+      }
+      return 'change-password';
     },
   ),
   GoRoute(
