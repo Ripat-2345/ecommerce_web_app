@@ -13,15 +13,14 @@ import 'package:http/http.dart' as http;
 class ProductProvider with ChangeNotifier {
   Future<ProductModel?> getProducts({BuildContext? context}) async {
     try {
-      // final dataUser = await readFromStorage('authData');
-      // final token = jsonDecode(dataUser!)['token'];
       final response = await http.get(Uri.parse("$baseUrl/products"), headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        // 'Authorization': 'Bearer $token',
       });
+
       print("status: ${response.statusCode}");
       print("body: ${response.body}");
+
       if (response.statusCode == 200) {
         return ProductModel.fromJson(jsonDecode(response.body));
       } else if (response.statusCode == 401) {
@@ -33,5 +32,62 @@ class ProductProvider with ChangeNotifier {
       print(e);
     }
     return null;
+  }
+
+  Future<ProductModel?> getProductsByIdUser({
+    BuildContext? context,
+    String? idUser,
+  }) async {
+    try {
+      final dataUser = await readFromStorage('authData');
+      final token = jsonDecode(dataUser!)['token'];
+      final response =
+          await http.get(Uri.parse("$baseUrl/products/$idUser"), headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      print("status: ${response.statusCode}");
+      print("body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return ProductModel.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401) {
+        await removeFromStorage('authData');
+        context!.goNamed('login');
+        snackBarInfo(context, jsonDecode(response.body)['message']);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future deleteProduct({
+    BuildContext? context,
+    String? idProduct,
+  }) async {
+    try {
+      final dataUser = await readFromStorage('authData');
+      final token = jsonDecode(dataUser!)['token'];
+      final response = await http
+          .delete(Uri.parse("$baseUrl/products/$idProduct"), headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      print("status: ${response.statusCode}");
+      print("body: ${response.body}");
+
+      if (response.statusCode == 401) {
+        await removeFromStorage('authData');
+        context!.goNamed('login');
+        snackBarInfo(context, jsonDecode(response.body)['message']);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

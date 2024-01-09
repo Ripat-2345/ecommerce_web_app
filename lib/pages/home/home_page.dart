@@ -336,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Special % Offers",
+                        "Our Products!",
                         style: TextStyle(
                           color: whiteColor,
                           fontSize: 38,
@@ -344,33 +344,24 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SizedBox(height: 50),
-                      CarouselSlider(
-                        items: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              children: dataProducts!.map((data) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: CustomProductWidget(
-                                    productName: data['name'],
-                                    price: data['price'].toString(),
-                                    // description: data['description'],
-                                    productImageUrl: data['picture'],
-                                  ),
-                                );
-                              }).toList(),
-                              // SizedBox(width: 50),
-                            ),
-                          ),
-                        ],
-                        options: CarouselOptions(
-                          autoPlay: true,
-                          height: 350,
-                          autoPlayAnimationDuration: const Duration(seconds: 3),
-                          scrollDirection: Axis.horizontal,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: dataProducts!.map((data) {
+                            return Container(
+                              margin: const EdgeInsets.only(
+                                right: 40,
+                              ),
+                              child: CustomProductWidget(
+                                productName: data['name'],
+                                price: data['price'].toString(),
+                                description: data['description'],
+                                productImageUrl: data['picture'],
+                                textColor: darkBlueColor,
+                              ),
+                            );
+                          }).toList(),
+                          // SizedBox(width: 50),
                         ),
                       ),
                     ],

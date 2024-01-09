@@ -2,6 +2,7 @@
 
 import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
+import 'package:ecommerce_web_app/utils/shared_values.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_icon_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class CustomProductWidget extends StatelessWidget {
   final String? description;
   final String? price;
   final String? productImageUrl;
+  final Color backgroundColor;
+  final Color textColor;
   const CustomProductWidget({
     super.key,
     this.productName = "Barang Pilihan Anak Bangsa",
@@ -19,6 +22,8 @@ class CustomProductWidget extends StatelessWidget {
         "Mantap kali barangnya dan bisa dibuat makan makan sama keluarga besar sambil baca komik",
     this.price = "100000",
     this.productImageUrl = "url gambar",
+    this.backgroundColor = Colors.white,
+    this.textColor = Colors.black,
   });
 
   @override
@@ -32,7 +37,7 @@ class CustomProductWidget extends StatelessWidget {
         height: 350,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: whiteColor,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -43,8 +48,11 @@ class CustomProductWidget extends StatelessWidget {
               height: 180,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: AssetImage("assets/images/product1.jpg"),
+                image: DecorationImage(
+                  image: productImageUrl!.isNotEmpty
+                      ? NetworkImage('$baseUrl/${productImageUrl!}')
+                          as ImageProvider
+                      : const AssetImage("assets/images/product1.jpg"),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -68,7 +76,7 @@ class CustomProductWidget extends StatelessWidget {
                       child: Text(
                         productName!,
                         style: TextStyle(
-                          color: darkBlueColor,
+                          color: textColor,
                           fontWeight: FontWeight.w700,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -81,7 +89,7 @@ class CustomProductWidget extends StatelessWidget {
                       child: Text(
                         description!,
                         style: TextStyle(
-                          color: darkBlueColor,
+                          color: textColor,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -102,7 +110,7 @@ class CustomProductWidget extends StatelessWidget {
                     Text(
                       "Rp.$price",
                       style: TextStyle(
-                        color: darkBlueColor,
+                        color: textColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                       ),

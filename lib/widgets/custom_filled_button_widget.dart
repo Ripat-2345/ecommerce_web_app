@@ -24,14 +24,18 @@ class CustomFilledButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: (screenWidth(context) >= laptopScreenSize)
           ? widthButton
           : double.infinity,
       height: heightButton,
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: FilledButton(
         onPressed: onPressed,
         style: ButtonStyle(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.all(0),
+          ),
           backgroundColor: MaterialStateProperty.all<Color>(backgroundButton),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
