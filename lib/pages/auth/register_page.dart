@@ -175,9 +175,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ],
                             ),
-                            // const CustomTextFieldWidget(
-                            //   title: "Your Avatar",
-                            // ),
                             const SizedBox(height: 30),
                             Align(
                               alignment: Alignment.centerRight,

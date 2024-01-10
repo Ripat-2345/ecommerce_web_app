@@ -41,7 +41,6 @@ void customShowDialog({
         ),
         content: SizedBox(
           width: screenWidth(context) / 2,
-          height: screenHeight(context) / 2,
           child: content,
         ),
         actions: actionList,

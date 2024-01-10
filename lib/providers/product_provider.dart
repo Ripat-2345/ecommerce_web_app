@@ -9,6 +9,8 @@ import 'package:ecommerce_web_app/utils/shared_values.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductProvider with ChangeNotifier {
   Future<ProductModel?> getProducts({BuildContext? context}) async {
@@ -62,6 +64,117 @@ class ProductProvider with ChangeNotifier {
       print(e);
     }
     return null;
+  }
+
+  Future addProduct({
+    BuildContext? context,
+    String? idUser,
+    String? productName,
+    String? description,
+    String? price,
+    XFile? picture,
+  }) async {
+    try {
+      final dataUser = await readFromStorage('authData');
+      final token = jsonDecode(dataUser!)['token'];
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse("$baseUrl/products"),
+      );
+      request.headers.addAll({
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'multipart/form-data',
+        'Authorization': 'Bearer $token',
+      });
+      request.fields['name'] = productName!;
+      request.fields['description'] = description!;
+      request.fields['price'] = price!;
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'picture',
+          await picture!.readAsBytes(),
+          filename: picture.name,
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+      request.fields['id_user'] = idUser!;
+      request.fields['datetime'] = DateTime.now().toString();
+
+      final response = await request.send();
+
+      print("status: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        response.stream.transform(utf8.decoder).listen((value) {
+          ProductModel.fromJson(jsonDecode(value));
+        });
+      } else if (response.statusCode == 401) {
+        response.stream.transform(utf8.decoder).listen((value) async {
+          await removeFromStorage('authData');
+          context!.goNamed('login');
+          snackBarInfo(context, jsonDecode(value)['message']);
+        });
+      }
+    } catch (e) {
+      print("Error nih: $e");
+    }
+  }
+
+  Future editProduct({
+    BuildContext? context,
+    String? idProduct,
+    String? idUser,
+    String? productName,
+    String? description,
+    String? price,
+    XFile? picture,
+  }) async {
+    try {
+      final dataUser = await readFromStorage('authData');
+      final token = jsonDecode(dataUser!)['token'];
+      final request = http.MultipartRequest(
+        'PATCH',
+        Uri.parse("$baseUrl/products/$idProduct"),
+      );
+      request.headers.addAll({
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'multipart/form-data',
+        'Authorization': 'Bearer $token',
+      });
+      request.fields['name'] = productName!;
+      request.fields['description'] = description!;
+      request.fields['price'] = price!;
+      if (picture!.path != '') {
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'picture',
+            await picture.readAsBytes(),
+            filename: picture.name,
+            contentType: MediaType('image', 'png'),
+          ),
+        );
+      }
+      request.fields['id_user'] = idUser!;
+      request.fields['datetime'] = DateTime.now().toString();
+
+      final response = await request.send();
+
+      print("status: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        response.stream.transform(utf8.decoder).listen((value) {
+          ProductModel.fromJson(jsonDecode(value));
+        });
+      } else if (response.statusCode == 401) {
+        response.stream.transform(utf8.decoder).listen((value) async {
+          await removeFromStorage('authData');
+          context!.goNamed('login');
+          snackBarInfo(context, jsonDecode(value)['message']);
+        });
+      }
+    } catch (e) {
+      print("Error nih: $e");
+    }
   }
 
   Future deleteProduct({

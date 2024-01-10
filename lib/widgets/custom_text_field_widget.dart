@@ -6,11 +6,13 @@ class CustomTextFieldWidget extends StatelessWidget {
   final String title;
   final bool obscureText;
   final TextEditingController? controller;
+  final double width;
   const CustomTextFieldWidget({
     super.key,
     required this.title,
     this.obscureText = false,
     this.controller,
+    this.width = 400,
   });
 
   @override
@@ -30,7 +32,7 @@ class CustomTextFieldWidget extends StatelessWidget {
         SizedBox(
           height: (screenWidth(context) >= laptopScreenSize) ? 50 : 40,
           width: (screenWidth(context) >= laptopScreenSize)
-              ? 400
+              ? width
               : double.infinity,
           child: TextField(
             controller: controller,
