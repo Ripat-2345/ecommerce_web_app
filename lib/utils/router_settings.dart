@@ -72,10 +72,11 @@ final GoRouter router = GoRouter(
       },
       redirect: (context, state) async {
         final data = await readFromStorage('authData');
+        final token = state.pathParameters['token'];
         if (data != null) {
           return "/";
         }
-        return '/change-password';
+        return '/change-password/$token';
       },
     ),
     GoRoute(
