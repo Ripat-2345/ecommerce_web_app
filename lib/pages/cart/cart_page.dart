@@ -1,11 +1,37 @@
-import 'package:ecommerce_web_app/utils/theme_settings.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class CartPage extends StatelessWidget {
+import 'package:ecommerce_web_app/providers/cart_provider.dart';
+import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
+import 'package:ecommerce_web_app/utils/theme_settings.dart';
+import 'package:ecommerce_web_app/widgets/custom_cart_item_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
   @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  Map<String, dynamic>? authData;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final data = await readFromStorage('authData');
+      setState(() {
+        authData = jsonDecode(data!);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<CartProvider>(context);
+
     return Expanded(
       child: SizedBox(
         width: double.infinity,
@@ -26,14 +52,59 @@ class CartPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'My Carts',
+                    'My Shopping Cart',
                     style: TextStyle(
                       color: darkBlueColor,
-                      fontSize: 24,
+                      fontSize: 28,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
+                  FutureBuilder(
+                    future: cartProvider.getCartsByIdUser(
+                      context: context,
+                      idUser: authData!['data']['id'].toString(),
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          runAlignment: WrapAlignment.spaceBetween,
+                          alignment: WrapAlignment.spaceBetween,
+                          children: snapshot.data!.dataCarts.map((data) {
+                            return CustomCartItemWidget(
+                              name: data['tbl_product']['name'],
+                              description: data['tbl_product']['description'],
+                              qty: data['quantity'].toString(),
+                              price: data['tbl_product']['price'].toString(),
+                              imgUrl: data['tbl_product']['picture'],
+                              removeQty: () async {
+                                await cartProvider.removeQtyProductCart(
+                                  context: context,
+                                  idCart: data['id'].toString(),
+                                  quantity: '1',
+                                );
+                                setState(() {});
+                              },
+                              addQty: () async {
+                                await cartProvider.addQtyProductCart(
+                                  context: context,
+                                  idCart: data['id'].toString(),
+                                  quantity: '1',
+                                );
+                                setState(() {});
+                              },
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),

@@ -24,7 +24,7 @@ final GoRouter router = GoRouter(
       path: '/login',
       name: 'login',
       builder: (context, state) {
-        return LoginPage();
+        return const LoginPage();
       },
       redirect: (context, state) async {
         final data = await readFromStorage('authData');

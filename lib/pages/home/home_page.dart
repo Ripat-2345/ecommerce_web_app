@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                               if (data != null) {
                                 context.goNamed(
                                   'dashboard',
-                                  pathParameters: {'page': 'market-place'},
+                                  pathParameters: {'page': 'my-store'},
                                 );
                               } else {
                                 snackBarInfo(
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                               onTap: () {
                                 context.goNamed(
                                   'dashboard',
-                                  pathParameters: {'page': 'market-place'},
+                                  pathParameters: {'page': 'my-store'},
                                 );
                               },
                               child: CustomProfileDisplayWidget(
@@ -346,23 +346,28 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 50),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: dataProducts!.map((data) {
-                            return Container(
-                              margin: const EdgeInsets.only(
-                                right: 40,
+                        child: dataProducts == null
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Row(
+                                children: dataProducts!.map((data) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(
+                                      right: 40,
+                                    ),
+                                    child: CustomProductWidget(
+                                      idProduct: data['id'].toString(),
+                                      productName: data['name'],
+                                      price: data['price'].toString(),
+                                      description: data['description'],
+                                      productImageUrl: data['picture'],
+                                      textColor: darkBlueColor,
+                                    ),
+                                  );
+                                }).toList(),
+                                // SizedBox(width: 50),
                               ),
-                              child: CustomProductWidget(
-                                productName: data['name'],
-                                price: data['price'].toString(),
-                                description: data['description'],
-                                productImageUrl: data['picture'],
-                                textColor: darkBlueColor,
-                              ),
-                            );
-                          }).toList(),
-                          // SizedBox(width: 50),
-                        ),
                       ),
                     ],
                   ),

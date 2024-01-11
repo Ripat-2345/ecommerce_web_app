@@ -21,20 +21,23 @@ class CustomIconButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Center(
-          child: Icon(
-            iconButton,
-            size: iconSize,
-            color: iconColor,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Center(
+            child: Icon(
+              iconButton,
+              size: iconSize,
+              color: iconColor,
+            ),
           ),
         ),
       ),

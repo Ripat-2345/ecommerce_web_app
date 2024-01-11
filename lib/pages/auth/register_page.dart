@@ -20,11 +20,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final nameController = TextEditingController();
-
   final usernameController = TextEditingController();
-
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
   XFile? avatar;
@@ -39,6 +36,15 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       return true;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
   }
 
   @override

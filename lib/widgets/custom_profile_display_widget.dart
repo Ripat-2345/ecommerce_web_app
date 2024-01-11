@@ -57,7 +57,7 @@ class CustomProfileDisplayWidget extends StatelessWidget {
             image: DecorationImage(
               image: pictUrl.isEmpty
                   ? const AssetImage("assets/images/user.png") as ImageProvider
-                  : NetworkImage('$baseUrl/$pictUrl'),
+                  : NetworkImage("$baseUrl/images/${pictUrl.split('\\')[1]}"),
               fit: BoxFit.cover,
             ),
           ),

@@ -1,5 +1,4 @@
 import 'package:ecommerce_web_app/pages/cart/cart_page.dart';
-import 'package:ecommerce_web_app/pages/market_place/market_place_page.dart';
 import 'package:ecommerce_web_app/pages/profile/profile_page.dart';
 import 'package:ecommerce_web_app/pages/store/store_page.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
@@ -17,29 +16,22 @@ class CustomSidebarWidget extends StatefulWidget {
 
 class _CustomSidebarWidgetState extends State<CustomSidebarWidget> {
   Map pages = {
-    'market-place': {
-      'index': 0,
-      'title': 'market-place',
-      'label': 'Market Place',
-      'icon': Icons.dashboard_rounded,
-      'page': const MarketPlacePage(),
-    },
     'my-store': {
-      'index': 1,
+      'index': 0,
       'title': 'my-store',
       'label': 'My Store',
       'icon': Icons.store_rounded,
       'page': const StorePage(),
     },
     'my-cart': {
-      'index': 2,
+      'index': 1,
       'title': 'my-cart',
       'label': 'My Cart',
       'icon': Icons.shopping_cart_rounded,
       'page': const CartPage(),
     },
     'profile': {
-      'index': 3,
+      'index': 2,
       'title': 'profile',
       'label': 'Profile',
       'icon': Icons.manage_accounts_rounded,

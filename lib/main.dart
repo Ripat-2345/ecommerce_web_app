@@ -1,4 +1,5 @@
 import 'package:ecommerce_web_app/providers/auth_provider.dart';
+import 'package:ecommerce_web_app/providers/cart_provider.dart';
 import 'package:ecommerce_web_app/providers/product_provider.dart';
 import 'package:ecommerce_web_app/providers/user_provider.dart';
 import 'package:ecommerce_web_app/utils/router_settings.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         Provider<AuthProvider>(create: (_) => AuthProvider()),
         Provider<UserProvider>(create: (_) => UserProvider()),
         Provider<ProductProvider>(create: (_) => ProductProvider()),
+        Provider<CartProvider>(create: (_) => CartProvider()),
       ],
       child: MaterialApp.router(
         scrollBehavior: const MaterialScrollBehavior().copyWith(

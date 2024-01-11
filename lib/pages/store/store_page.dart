@@ -85,7 +85,7 @@ class _StorePageState extends State<StorePage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: Image.network(
-                        "$baseUrl/${authData!['data']['avatar']}",
+                        "$baseUrl/images/${authData!['data']['avatar'].split("\\")[1]}",
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,
@@ -219,7 +219,7 @@ class _StorePageState extends State<StorePage> {
                                       DataCell(Text('${no++}')),
                                       DataCell(
                                         Image.network(
-                                          '$baseUrl/${data['picture']!}',
+                                          '$baseUrl/images/${data['picture']!.split("\\")[1]}',
                                           width: 300,
                                           height: 100,
                                         ),
@@ -471,7 +471,7 @@ class _StorePageState extends State<StorePage> {
                     child: Image.network(
                       picture!.path != ''
                           ? picture!.path
-                          : "$baseUrl/${data['picture']}",
+                          : "$baseUrl/images/${data['picture'].split("\\")[1]}",
                       width: 200,
                       fit: BoxFit.cover,
                     ),

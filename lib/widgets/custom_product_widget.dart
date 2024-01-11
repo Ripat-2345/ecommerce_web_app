@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
+import 'package:ecommerce_web_app/providers/cart_provider.dart';
 import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/shared_values.dart';
@@ -7,8 +10,10 @@ import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_icon_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CustomProductWidget extends StatelessWidget {
+  final String? idProduct;
   final String? productName;
   final String? description;
   final String? price;
@@ -24,10 +29,13 @@ class CustomProductWidget extends StatelessWidget {
     this.productImageUrl = "url gambar",
     this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
+    required this.idProduct,
   });
 
   @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<CartProvider>(context);
+
     return GestureDetector(
       onTap: () {
         context.goNamed('product');
@@ -50,8 +58,9 @@ class CustomProductWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
                   image: productImageUrl!.isNotEmpty
-                      ? NetworkImage('$baseUrl/${productImageUrl!}')
-                          as ImageProvider
+                      ? NetworkImage(
+                          '$baseUrl/images/${productImageUrl!.split("\\")[1]}',
+                        ) as ImageProvider
                       : const AssetImage("assets/images/product1.jpg"),
                   fit: BoxFit.contain,
                 ),
@@ -124,6 +133,13 @@ class CustomProductWidget extends StatelessWidget {
                       snackBarInfo(
                         context,
                         "Anda Harus Login Terlebih Dahulu!",
+                      );
+                    } else {
+                      await cartProvider.addProductToCart(
+                        context: context,
+                        idProduct: idProduct,
+                        idUser: jsonDecode(data)['data']['id'].toString(),
+                        quantity: '1',
                       );
                     }
                   },
