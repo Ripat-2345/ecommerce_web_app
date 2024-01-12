@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/shared_values.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
+import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomProfileDisplayWidget extends StatelessWidget {
   final String username;
@@ -15,39 +20,34 @@ class CustomProfileDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            username.isNotEmpty
-                ? Text(
+        username.isNotEmpty
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
                     "Howday, $username",
                     style: TextStyle(
                       color: whiteColor,
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
-                  )
-                : const SizedBox(),
-            Row(
-              children: [
-                Icon(
-                  Icons.wallet,
-                  size: 24,
-                  color: whiteColor,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  "Rp.45000",
-                  style: TextStyle(
-                    color: yellowColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                  CustomFilledButtonWidget(
+                    title: "Logout",
+                    widthButton: 60,
+                    heightButton: 30,
+                    backgroundButton: Colors.red,
+                    textButtonColor: whiteColor,
+                    textButtonSize: 14,
+                    textButtonFontWeight: FontWeight.w500,
+                    onPressed: () async {
+                      await removeFromStorage('authData');
+                      context.goNamed('home');
+                    },
+                  ),
+                ],
+              )
+            : const SizedBox(),
         const SizedBox(width: 10),
         Container(
           width: 60,

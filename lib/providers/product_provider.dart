@@ -36,6 +36,26 @@ class ProductProvider with ChangeNotifier {
     return null;
   }
 
+  Future<ProductDetailModel?> getDetailProduct({String? id}) async {
+    try {
+      final response =
+          await http.get(Uri.parse("$baseUrl/products/detail/$id"), headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      });
+
+      print("status: ${response.statusCode}");
+      print("body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return ProductDetailModel.fromJson(jsonDecode(response.body));
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
   Future<ProductModel?> getProductsByIdUser({
     BuildContext? context,
     String? idUser,

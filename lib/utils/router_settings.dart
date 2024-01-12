@@ -4,9 +4,10 @@ import 'package:ecommerce_web_app/pages/auth/change_password_page.dart';
 import 'package:ecommerce_web_app/pages/auth/forgot_password_page.dart';
 import 'package:ecommerce_web_app/pages/auth/login_page.dart';
 import 'package:ecommerce_web_app/pages/auth/register_page.dart';
-import 'package:ecommerce_web_app/pages/home/home_page.dart';
 import 'package:ecommerce_web_app/pages/not_found_page.dart';
+import 'package:ecommerce_web_app/pages/product/product_page.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
+import 'package:ecommerce_web_app/widgets/custom_navbar_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_sidebar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,34 @@ final GoRouter router = GoRouter(
       path: '/',
       name: 'home',
       builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
+        return const CustomNavbarWidget(page: 'home');
+      },
+    ),
+    GoRoute(
+      path: '/shop',
+      name: 'shop',
+      builder: (BuildContext context, GoRouterState state) {
+        return const CustomNavbarWidget(
+          page: 'shop',
+        );
+      },
+    ),
+    GoRoute(
+      path: '/product/:product',
+      name: 'product',
+      builder: (BuildContext context, GoRouterState state) {
+        return ProductPage(
+          product: state.pathParameters['product']!,
+        );
+      },
+    ),
+    GoRoute(
+      path: '/our-teams',
+      name: 'our-teams',
+      builder: (BuildContext context, GoRouterState state) {
+        return const CustomNavbarWidget(
+          page: 'our-teams',
+        );
       },
     ),
     GoRoute(
