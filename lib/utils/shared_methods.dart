@@ -3,9 +3,14 @@ import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-void snackBarInfo(BuildContext context, String msg) {
+void snackBarInfo(
+  BuildContext context,
+  String msg, {
+  Color backgroundColor = Colors.red,
+}) {
   final snackBar = SnackBar(
-    backgroundColor: Colors.red,
+    duration: const Duration(milliseconds: 500),
+    backgroundColor: backgroundColor,
     content: Text(msg),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);

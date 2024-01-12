@@ -1,5 +1,4 @@
 import 'package:ecommerce_web_app/pages/cart/cart_page.dart';
-import 'package:ecommerce_web_app/pages/profile/profile_page.dart';
 import 'package:ecommerce_web_app/pages/store/store_page.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:flutter/material.dart';
@@ -29,13 +28,6 @@ class _CustomSidebarWidgetState extends State<CustomSidebarWidget> {
       'label': 'My Cart',
       'icon': Icons.shopping_cart_rounded,
       'page': const CartPage(),
-    },
-    'profile': {
-      'index': 2,
-      'title': 'profile',
-      'label': 'Profile',
-      'icon': Icons.manage_accounts_rounded,
-      'page': const ProfilePage(),
     },
   };
 
@@ -73,26 +65,32 @@ class _CustomSidebarWidgetState extends State<CustomSidebarWidget> {
                 extended: true,
               ),
               headerBuilder: (context, extended) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "assets/icons/logo_icon.png",
-                        width: 50,
+                return MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => context.goNamed('home'),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/icons/logo_icon.png",
+                            width: 50,
+                          ),
+                          const SizedBox(width: 10),
+                          (extended)
+                              ? Text(
+                                  "Ecommerce Web",
+                                  style: TextStyle(
+                                    color: darkBlueColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      (extended)
-                          ? Text(
-                              "Ecommerce Web",
-                              style: TextStyle(
-                                color: darkBlueColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                          : const SizedBox(),
-                    ],
+                    ),
                   ),
                 );
               },

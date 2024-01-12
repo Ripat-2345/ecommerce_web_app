@@ -51,12 +51,22 @@ class _CartPageState extends State<CartPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'My Shopping Cart',
-                    style: TextStyle(
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
                       color: darkBlueColor,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      'My Shopping Cart',
+                      style: TextStyle(
+                        color: whiteColor,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -66,43 +76,37 @@ class _CartPageState extends State<CartPage> {
                       idUser: authData!['data']['id'].toString(),
                     ),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        return Wrap(
-                          spacing: 20,
-                          runSpacing: 20,
-                          runAlignment: WrapAlignment.spaceBetween,
-                          alignment: WrapAlignment.spaceBetween,
-                          children: snapshot.data!.dataCarts.map((data) {
-                            return CustomCartItemWidget(
-                              name: data['tbl_product']['name'],
-                              description: data['tbl_product']['description'],
-                              qty: data['quantity'].toString(),
-                              price: data['tbl_product']['price'].toString(),
-                              imgUrl: data['tbl_product']['picture'],
-                              removeQty: () async {
-                                await cartProvider.removeQtyProductCart(
-                                  context: context,
-                                  idCart: data['id'].toString(),
-                                  quantity: '1',
-                                );
-                                setState(() {});
-                              },
-                              addQty: () async {
-                                await cartProvider.addQtyProductCart(
-                                  context: context,
-                                  idCart: data['id'].toString(),
-                                  quantity: '1',
-                                );
-                                setState(() {});
-                              },
-                            );
-                          }).toList(),
-                        );
-                      }
+                      return Wrap(
+                        spacing: 20,
+                        runSpacing: 20,
+                        runAlignment: WrapAlignment.spaceBetween,
+                        alignment: WrapAlignment.spaceBetween,
+                        children: snapshot.data!.dataCarts.map((data) {
+                          return CustomCartItemWidget(
+                            name: data['tbl_product']['name'],
+                            description: data['tbl_product']['description'],
+                            qty: data['quantity'].toString(),
+                            price: data['tbl_product']['price'].toString(),
+                            imgUrl: data['tbl_product']['picture'],
+                            removeQty: () async {
+                              await cartProvider.removeQtyProductCart(
+                                context: context,
+                                idCart: data['id'].toString(),
+                                quantity: '1',
+                              );
+                              setState(() {});
+                            },
+                            addQty: () async {
+                              await cartProvider.addQtyProductCart(
+                                context: context,
+                                idCart: data['id'].toString(),
+                                quantity: '1',
+                              );
+                              setState(() {});
+                            },
+                          );
+                        }).toList(),
+                      );
                     },
                   ),
                 ],

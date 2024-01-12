@@ -51,18 +51,24 @@ class CustomProductWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: double.infinity,
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: productImageUrl!.isNotEmpty
-                      ? NetworkImage(
-                          '$baseUrl/images/${productImageUrl!.split("\\")[1]}',
-                        ) as ImageProvider
-                      : const AssetImage("assets/images/product1.jpg"),
-                  fit: BoxFit.contain,
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: double.infinity,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: productImageUrl!.isNotEmpty
+                          ? NetworkImage(
+                              '$baseUrl/images/${productImageUrl!.split("\\")[1]}',
+                            ) as ImageProvider
+                          : const AssetImage("assets/images/product1.jpg"),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -135,12 +141,20 @@ class CustomProductWidget extends StatelessWidget {
                         "Anda Harus Login Terlebih Dahulu!",
                       );
                     } else {
-                      await cartProvider.addProductToCart(
+                      await cartProvider
+                          .addProductToCart(
                         context: context,
                         idProduct: idProduct,
                         idUser: jsonDecode(data)['data']['id'].toString(),
                         quantity: '1',
-                      );
+                      )
+                          .then((_) {
+                        snackBarInfo(
+                          backgroundColor: Colors.green,
+                          context,
+                          "Berhasil Menambahkan!",
+                        );
+                      });
                     }
                   },
                   iconButton: Icons.add_shopping_cart_rounded,

@@ -99,7 +99,6 @@ class CartProvider with ChangeNotifier {
 
       print("status: ${response.statusCode}");
       print("body: ${response.body}");
-
       if (response.statusCode == 401) {
         await removeFromStorage('authData');
         context!.goNamed('login');

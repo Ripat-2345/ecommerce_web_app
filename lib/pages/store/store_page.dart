@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:html' as html;
 
 import 'package:ecommerce_web_app/providers/product_provider.dart';
 import 'package:ecommerce_web_app/utils/shared_methods.dart';
@@ -52,13 +51,56 @@ class _StorePageState extends State<StorePage> {
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    productNameController.dispose();
-    descriptionController.dispose();
-    priceController.dispose();
-  }
+  List<DataColumn> headingDataTable = const [
+    DataColumn(
+      label: Expanded(
+        child: Text(
+          'ID',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+    DataColumn(
+      label: Expanded(
+        child: Text(
+          'Image',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+    DataColumn(
+      label: Expanded(
+        child: Text(
+          'Name',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+    DataColumn(
+      label: Expanded(
+        child: Text(
+          'Description',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+    DataColumn(
+      label: Expanded(
+        child: Text(
+          'Price',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+    DataColumn(
+      label: Expanded(
+        child: Text(
+          'Action',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -80,84 +122,36 @@ class _StorePageState extends State<StorePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // todo: profile user
+                profileUser(context),
+                const SizedBox(height: 50),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.network(
-                        "$baseUrl/images/${authData!['data']['avatar'].split("\\")[1]}",
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
+                    Text(
+                      'List Of My Products',
+                      style: TextStyle(
+                        color: darkBlueColor,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          authData!['data']['username'],
-                          style: TextStyle(
-                            color: darkBlueColor,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            CustomFilledButtonWidget(
-                              title: "Edit Profile",
-                              widthButton: 120,
-                              heightButton: 35,
-                              backgroundButton: blueColor,
-                              textButtonColor: whiteColor,
-                              textButtonSize: 14,
-                              textButtonFontWeight: FontWeight.w500,
-                              onPressed: () {},
-                            ),
-                            const SizedBox(width: 10),
-                            CustomFilledButtonWidget(
-                              title: "Logout",
-                              widthButton: 80,
-                              heightButton: 35,
-                              backgroundButton: Colors.red,
-                              textButtonColor: whiteColor,
-                              textButtonSize: 14,
-                              textButtonFontWeight: FontWeight.w500,
-                              onPressed: () async {
-                                await removeFromStorage('authData');
-                                context.goNamed('home');
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
                     const Spacer(),
+
                     // todo: add product
                     CustomFilledButtonWidget(
                       title: "Add Product",
                       widthButton: 150,
                       heightButton: 50,
-                      backgroundButton: yellowColor,
-                      textButtonColor: darkBlueColor,
+                      backgroundButton: Colors.green,
+                      textButtonColor: whiteColor,
                       textButtonSize: 18,
-                      textButtonFontWeight: FontWeight.w800,
+                      textButtonFontWeight: FontWeight.w500,
                       onPressed: () {
                         addProduct(context, productProvider);
                       },
-                    )
+                    ),
                   ],
-                ),
-                const SizedBox(height: 50),
-                Text(
-                  'List Of My Products',
-                  style: TextStyle(
-                    color: darkBlueColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
                 ),
                 const SizedBox(height: 20),
                 // todo: display list of user product
@@ -167,119 +161,285 @@ class _StorePageState extends State<StorePage> {
                     idUser: authData!['data']['id'].toString(),
                   ),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      var no = 1;
-                      return snapshot.data!.dataProducts.isEmpty
-                          ? Center(
-                              child: Text(
-                                "Tidak Ada Product!",
-                                style: TextStyle(
-                                  color: darkBlueColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                ),
+                    var no = 1;
+                    return snapshot.data!.dataProducts.isEmpty
+                        ? Center(
+                            child: Text(
+                              "Tidak Ada Product!",
+                              style: TextStyle(
+                                color: darkBlueColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
                               ),
-                            )
-                          : SizedBox(
-                              width: double.infinity,
-                              child: DataTable(
-                                headingRowColor:
-                                    MaterialStatePropertyAll(darkBlueColor),
-                                headingTextStyle: TextStyle(
-                                  color: whiteColor,
-                                ),
-                                dataRowMaxHeight: 100,
-                                columns: const [
-                                  DataColumn(
-                                    label: Text('ID'),
-                                  ),
-                                  DataColumn(
-                                    label: Text('Image'),
-                                  ),
-                                  DataColumn(
-                                    label: Text('Name'),
-                                  ),
-                                  DataColumn(
-                                    label: Text('Description'),
-                                  ),
-                                  DataColumn(
-                                    label: Text('Price'),
-                                  ),
-                                  DataColumn(
-                                    label: Text('Action'),
-                                  ),
-                                ],
-                                rows: snapshot.data!.dataProducts.map((data) {
-                                  return DataRow(
-                                    cells: [
-                                      DataCell(Text('${no++}')),
-                                      DataCell(
-                                        Image.network(
+                            ),
+                          )
+                        : SizedBox(
+                            width: double.infinity,
+                            child: DataTable(
+                              headingRowColor: MaterialStatePropertyAll(
+                                darkBlueColor,
+                              ),
+                              headingTextStyle: TextStyle(color: whiteColor),
+                              dataRowMaxHeight: 100,
+                              columns: headingDataTable,
+                              rows: snapshot.data!.dataProducts.map((data) {
+                                return DataRow(
+                                  cells: [
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          '${no++}',
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Image.network(
                                           '$baseUrl/images/${data['picture']!.split("\\")[1]}',
                                           width: 300,
                                           height: 100,
                                         ),
                                       ),
-                                      DataCell(Text(data['name'])),
-                                      DataCell(Text(data['description'])),
-                                      DataCell(Text(data['price'].toString())),
-                                      DataCell(
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              CustomFilledButtonWidget(
-                                                title: "Edit",
-                                                widthButton: 80,
-                                                heightButton: 40,
-                                                backgroundButton: blueColor,
-                                                textButtonColor: whiteColor,
-                                                textButtonSize: 14,
-                                                textButtonFontWeight:
-                                                    FontWeight.w500,
-                                                onPressed: () {
-                                                  editProduct(
-                                                    context,
-                                                    data,
-                                                    productProvider,
-                                                  );
-                                                },
-                                              ),
-                                              const SizedBox(width: 10),
-                                              CustomFilledButtonWidget(
-                                                title: "Hapus",
-                                                widthButton: 80,
-                                                heightButton: 40,
-                                                backgroundButton: Colors.red,
-                                                textButtonColor: whiteColor,
-                                                textButtonSize: 14,
-                                                textButtonFontWeight:
-                                                    FontWeight.w500,
-                                                onPressed: () async {
-                                                  deleteProduct(
-                                                    productProvider,
-                                                    data,
-                                                  );
-                                                },
-                                              )
-                                            ],
-                                          ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          data['name'],
                                         ),
                                       ),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                            );
-                    }
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          data['description'],
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          data['price'].toString(),
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CustomFilledButtonWidget(
+                                              title: "Edit",
+                                              widthButton: 80,
+                                              heightButton: 40,
+                                              backgroundButton: blueColor,
+                                              textButtonColor: whiteColor,
+                                              textButtonSize: 14,
+                                              textButtonFontWeight:
+                                                  FontWeight.w500,
+                                              onPressed: () {
+                                                editProduct(
+                                                  context,
+                                                  data,
+                                                  productProvider,
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(width: 10),
+                                            CustomFilledButtonWidget(
+                                              title: "Hapus",
+                                              widthButton: 80,
+                                              heightButton: 40,
+                                              backgroundButton: Colors.red,
+                                              textButtonColor: whiteColor,
+                                              textButtonSize: 14,
+                                              textButtonFontWeight:
+                                                  FontWeight.w500,
+                                              onPressed: () async {
+                                                deleteProduct(
+                                                  productProvider,
+                                                  data,
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                          );
                   },
-                )
+                ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // todo: Profile User
+  Container profileUser(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: blueWhiteColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.network(
+              "$baseUrl/images/${authData!['data']['avatar'].split("\\")[1]}",
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                authData!['data']['name'],
+                style: TextStyle(
+                  color: darkBlueColor,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    authData!['data']['username'],
+                    style: TextStyle(
+                      color: blueColor,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Text(
+                    " - ",
+                    style: TextStyle(
+                      color: blueColor,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Text(
+                    authData!['data']['email'],
+                    style: TextStyle(
+                      color: blueColor,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  CustomFilledButtonWidget(
+                    title: "Edit Profile",
+                    widthButton: 85,
+                    heightButton: 30,
+                    backgroundButton: blueColor,
+                    textButtonColor: whiteColor,
+                    textButtonSize: 14,
+                    textButtonFontWeight: FontWeight.w500,
+                    onPressed: () {
+                      customShowDialog(
+                        context: context,
+                        title: "Edit Profile",
+                        content: Column(children: []),
+                        actionList: [
+                          CustomFilledButtonWidget(
+                            title: "Add",
+                            widthButton: 80,
+                            heightButton: 40,
+                            backgroundButton: Colors.green,
+                            textButtonColor: whiteColor,
+                            textButtonSize: 14,
+                            textButtonFontWeight: FontWeight.w500,
+                            onPressed: () async {},
+                          ),
+                          CustomFilledButtonWidget(
+                            title: "Cancel",
+                            widthButton: 80,
+                            heightButton: 40,
+                            backgroundButton: Colors.red,
+                            textButtonColor: whiteColor,
+                            textButtonSize: 14,
+                            textButtonFontWeight: FontWeight.w500,
+                            onPressed: () async {
+                              context.pop();
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  CustomFilledButtonWidget(
+                    title: "Edit Password",
+                    widthButton: 110,
+                    heightButton: 30,
+                    backgroundButton: darkBlueColor,
+                    textButtonColor: whiteColor,
+                    textButtonSize: 14,
+                    textButtonFontWeight: FontWeight.w500,
+                    onPressed: () {
+                      customShowDialog(
+                        context: context,
+                        title: "Change Password",
+                        content: Column(children: []),
+                        actionList: [
+                          CustomFilledButtonWidget(
+                            title: "Add",
+                            widthButton: 80,
+                            heightButton: 40,
+                            backgroundButton: Colors.green,
+                            textButtonColor: whiteColor,
+                            textButtonSize: 14,
+                            textButtonFontWeight: FontWeight.w500,
+                            onPressed: () async {},
+                          ),
+                          CustomFilledButtonWidget(
+                            title: "Cancel",
+                            widthButton: 80,
+                            heightButton: 40,
+                            backgroundButton: Colors.red,
+                            textButtonColor: whiteColor,
+                            textButtonSize: 14,
+                            textButtonFontWeight: FontWeight.w500,
+                            onPressed: () async {
+                              context.pop();
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const Spacer(),
+          CustomFilledButtonWidget(
+            title: "Logout",
+            widthButton: 80,
+            heightButton: 35,
+            backgroundButton: Colors.red,
+            textButtonColor: whiteColor,
+            textButtonSize: 14,
+            textButtonFontWeight: FontWeight.w500,
+            onPressed: () async {
+              await removeFromStorage('authData');
+              context.goNamed('home');
+            },
           ),
         ],
       ),
@@ -290,7 +450,7 @@ class _StorePageState extends State<StorePage> {
   void addProduct(BuildContext context, ProductProvider productProvider) {
     return customShowDialog(
       context: context,
-      title: "Add Product",
+      title: "",
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -380,7 +540,8 @@ class _StorePageState extends State<StorePage> {
                 idUser: authData!['data']['id'].toString(),
               )
                   .then((_) {
-                html.window.location.reload();
+                context.pop();
+                setState(() {});
               });
             }
           },
@@ -415,7 +576,7 @@ class _StorePageState extends State<StorePage> {
     });
     return customShowDialog(
       context: context,
-      title: "Edit Product",
+      title: "",
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -504,7 +665,8 @@ class _StorePageState extends State<StorePage> {
                 idUser: authData!['data']['id'].toString(),
               )
                   .then((_) {
-                html.window.location.reload();
+                context.pop();
+                setState(() {});
               });
             }
           },
@@ -526,11 +688,22 @@ class _StorePageState extends State<StorePage> {
   }
 
   // todo: delete product function
-  void deleteProduct(ProductProvider productProvider, data) {
-    productProvider.deleteProduct(
+  void deleteProduct(ProductProvider productProvider, data) async {
+    await productProvider
+        .deleteProduct(
       context: context,
       idProduct: data['id'].toString(),
-    );
-    html.window.location.reload();
+    )
+        .then((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    productNameController.dispose();
+    descriptionController.dispose();
+    priceController.dispose();
   }
 }
