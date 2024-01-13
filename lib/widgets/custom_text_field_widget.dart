@@ -24,8 +24,8 @@ class CustomTextFieldWidget extends StatelessWidget {
           title,
           style: TextStyle(
             color: blueColor,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 10),

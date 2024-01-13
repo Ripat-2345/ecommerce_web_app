@@ -15,19 +15,19 @@ class CustomSidebarWidget extends StatefulWidget {
 
 class _CustomSidebarWidgetState extends State<CustomSidebarWidget> {
   Map pages = {
-    'my-store': {
-      'index': 0,
-      'title': 'my-store',
-      'label': 'My Store',
-      'icon': Icons.store_rounded,
-      'page': const StorePage(),
-    },
     'my-cart': {
-      'index': 1,
+      'index': 0,
       'title': 'my-cart',
       'label': 'My Cart',
       'icon': Icons.shopping_cart_rounded,
       'page': const CartPage(),
+    },
+    'my-store': {
+      'index': 1,
+      'title': 'my-store',
+      'label': 'My Store',
+      'icon': Icons.store_rounded,
+      'page': const StorePage(),
     },
   };
 

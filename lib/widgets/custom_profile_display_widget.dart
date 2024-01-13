@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:html' as html;
 
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/shared_values.dart';
@@ -43,22 +44,27 @@ class CustomProfileDisplayWidget extends StatelessWidget {
                     onPressed: () async {
                       await removeFromStorage('authData');
                       context.goNamed('home');
+                      html.window.location.reload();
                     },
                   ),
                 ],
               )
             : const SizedBox(),
         const SizedBox(width: 10),
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            image: DecorationImage(
-              image: pictUrl.isEmpty
-                  ? const AssetImage("assets/images/user.png") as ImageProvider
-                  : NetworkImage("$baseUrl/images/${pictUrl.split('\\')[1]}"),
-              fit: BoxFit.cover,
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              image: DecorationImage(
+                image: pictUrl.isEmpty
+                    ? const AssetImage("assets/images/user.png")
+                        as ImageProvider
+                    : NetworkImage("$baseUrl/images/${pictUrl.split('\\')[1]}"),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

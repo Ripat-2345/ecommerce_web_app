@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:ecommerce_web_app/providers/product_provider.dart';
+import 'package:ecommerce_web_app/providers/user_provider.dart';
 import 'package:ecommerce_web_app/utils/shared_methods.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/shared_values.dart';
@@ -22,6 +23,7 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
+  // todo: product property
   final productNameController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
@@ -31,6 +33,39 @@ class _StorePageState extends State<StorePage> {
     if (productNameController.text.isEmpty ||
         descriptionController.text.isEmpty ||
         priceController.text.isEmpty) {
+      snackBarInfo(context, "Field Tidak Boleh Kosong");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // todo: user property
+  TextEditingController? nameController;
+  TextEditingController? usernameController;
+  TextEditingController? emailController;
+
+  XFile? userImage;
+
+  bool isValidatedFormUser(BuildContext context) {
+    if (nameController!.text.isEmpty ||
+        usernameController!.text.isEmpty ||
+        emailController!.text.isEmpty) {
+      snackBarInfo(context, "Field Tidak Boleh Kosong");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  bool isValidatedChangePasswordUser(BuildContext context) {
+    if (newPasswordController.text.isEmpty ||
+        currentPasswordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty) {
       snackBarInfo(context, "Field Tidak Boleh Kosong");
       return false;
     } else {
@@ -105,6 +140,7 @@ class _StorePageState extends State<StorePage> {
   @override
   Widget build(BuildContext context) {
     var productProvider = Provider.of<ProductProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     return Expanded(
       child: ListView(
         padding: const EdgeInsets.only(
@@ -123,7 +159,7 @@ class _StorePageState extends State<StorePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // todo: profile user
-                profileUser(context),
+                profileUser(context, authData, userProvider),
                 const SizedBox(height: 50),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,7 +319,11 @@ class _StorePageState extends State<StorePage> {
   }
 
   // todo: Profile User
-  Container profileUser(BuildContext context) {
+  Container profileUser(
+    BuildContext context,
+    Map<String, dynamic>? authData,
+    UserProvider? userProvider,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -307,7 +347,7 @@ class _StorePageState extends State<StorePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                authData!['data']['name'],
+                authData['data']['name'],
                 style: TextStyle(
                   color: darkBlueColor,
                   fontSize: 28,
@@ -317,7 +357,7 @@ class _StorePageState extends State<StorePage> {
               Row(
                 children: [
                   Text(
-                    authData!['data']['username'],
+                    authData['data']['username'],
                     style: TextStyle(
                       color: blueColor,
                       fontWeight: FontWeight.w300,
@@ -331,7 +371,7 @@ class _StorePageState extends State<StorePage> {
                     ),
                   ),
                   Text(
-                    authData!['data']['email'],
+                    authData['data']['email'],
                     style: TextStyle(
                       color: blueColor,
                       fontWeight: FontWeight.w300,
@@ -351,20 +391,111 @@ class _StorePageState extends State<StorePage> {
                     textButtonSize: 14,
                     textButtonFontWeight: FontWeight.w500,
                     onPressed: () {
+                      setState(() {
+                        nameController = TextEditingController(
+                            text: authData['data']['name']);
+                        usernameController = TextEditingController(
+                            text: authData['data']['username']);
+                        emailController = TextEditingController(
+                            text: authData['data']['email']);
+                        userImage = XFile('');
+                      });
                       customShowDialog(
                         context: context,
                         title: "Edit Profile",
-                        content: Column(children: []),
+                        content: StatefulBuilder(
+                          builder: (context, setState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextFieldWidget(
+                                  title: "Name",
+                                  controller: nameController,
+                                  width: double.infinity,
+                                ),
+                                const SizedBox(height: 20),
+                                CustomTextFieldWidget(
+                                  title: "Username",
+                                  controller: usernameController,
+                                  width: double.infinity,
+                                ),
+                                const SizedBox(height: 20),
+                                CustomTextFieldWidget(
+                                  title: "Email",
+                                  controller: emailController,
+                                  width: double.infinity,
+                                ),
+                                const SizedBox(height: 20),
+                                Flex(
+                                  direction: Axis.vertical,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomFilledButtonWidget(
+                                      title: "Change Profile Image",
+                                      widthButton: 160,
+                                      heightButton: 40,
+                                      backgroundButton: yellowColor,
+                                      textButtonColor: darkBlueColor,
+                                      textButtonSize: 14,
+                                      textButtonFontWeight: FontWeight.w600,
+                                      onPressed: () async {
+                                        var image = await takeImageFromDevice();
+                                        setState(() {
+                                          if (image == null) {
+                                            image = XFile('');
+                                            userImage = image;
+                                          } else {
+                                            userImage = image;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        userImage!.path != ''
+                                            ? userImage!.path
+                                            : "$baseUrl/images/${authData['data']['avatar'].split("\\")[1]}",
+                                        width: 200,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                         actionList: [
                           CustomFilledButtonWidget(
-                            title: "Add",
+                            title: "Change",
                             widthButton: 80,
                             heightButton: 40,
-                            backgroundButton: Colors.green,
+                            backgroundButton: darkBlueColor,
                             textButtonColor: whiteColor,
                             textButtonSize: 14,
                             textButtonFontWeight: FontWeight.w500,
-                            onPressed: () async {},
+                            onPressed: () async {
+                              if (isValidatedFormUser(context)) {
+                                await userProvider!
+                                    .updateBioUser(
+                                  context: context,
+                                  name: nameController!.text,
+                                  username: usernameController!.text,
+                                  email: emailController!.text,
+                                  avatar: userImage,
+                                  idUser: authData['data']['id'].toString(),
+                                )
+                                    .then((_) {
+                                  context.pop();
+                                  setState(() {});
+                                });
+                              }
+                            },
                           ),
                           CustomFilledButtonWidget(
                             title: "Cancel",
@@ -377,7 +508,7 @@ class _StorePageState extends State<StorePage> {
                             onPressed: () async {
                               context.pop();
                             },
-                          )
+                          ),
                         ],
                       );
                     },
@@ -395,17 +526,59 @@ class _StorePageState extends State<StorePage> {
                       customShowDialog(
                         context: context,
                         title: "Change Password",
-                        content: Column(children: []),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomTextFieldWidget(
+                              title: "Current Password",
+                              controller: currentPasswordController,
+                              obscureText: true,
+                              width: double.infinity,
+                            ),
+                            const SizedBox(height: 20),
+                            CustomTextFieldWidget(
+                              title: "New Password",
+                              controller: newPasswordController,
+                              obscureText: true,
+                              width: double.infinity,
+                            ),
+                            const SizedBox(height: 20),
+                            CustomTextFieldWidget(
+                              title: "Confirm Password",
+                              controller: confirmPasswordController,
+                              obscureText: true,
+                              width: double.infinity,
+                            ),
+                          ],
+                        ),
                         actionList: [
                           CustomFilledButtonWidget(
-                            title: "Add",
+                            title: "Change",
                             widthButton: 80,
                             heightButton: 40,
-                            backgroundButton: Colors.green,
+                            backgroundButton: darkBlueColor,
                             textButtonColor: whiteColor,
                             textButtonSize: 14,
                             textButtonFontWeight: FontWeight.w500,
-                            onPressed: () async {},
+                            onPressed: () async {
+                              if (isValidatedChangePasswordUser(context)) {
+                                if (newPasswordController.text ==
+                                    confirmPasswordController.text) {
+                                  await userProvider!.updatePasswordUser(
+                                    context: context,
+                                    idUser: authData['data']['id'].toString(),
+                                    currentPassword:
+                                        currentPasswordController.text,
+                                    password: confirmPasswordController.text,
+                                  );
+                                } else {
+                                  snackBarInfo(
+                                    context,
+                                    "Confirm Password Salah",
+                                  );
+                                }
+                              }
+                            },
                           ),
                           CustomFilledButtonWidget(
                             title: "Cancel",
@@ -448,9 +621,15 @@ class _StorePageState extends State<StorePage> {
 
   // todo: add product function
   void addProduct(BuildContext context, ProductProvider productProvider) {
+    setState(() {
+      productNameController.text = "";
+      descriptionController.text = "";
+      priceController.text = "";
+      picture = XFile('');
+    });
     return customShowDialog(
       context: context,
-      title: "",
+      title: "Add Product",
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -576,7 +755,7 @@ class _StorePageState extends State<StorePage> {
     });
     return customShowDialog(
       context: context,
-      title: "",
+      title: "Edit Product",
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -705,5 +884,9 @@ class _StorePageState extends State<StorePage> {
     productNameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
+
+    nameController!.dispose();
+    usernameController!.dispose();
+    emailController!.dispose();
   }
 }
