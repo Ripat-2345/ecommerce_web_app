@@ -32,7 +32,6 @@ class _CustomNavbarWidgetState extends State<CustomNavbarWidget> {
 
   void _loadAuthDataFromStorage() async {
     final data = await readFromStorage('authData');
-
     setState(() {
       authData = jsonDecode(data!);
     });
@@ -165,6 +164,7 @@ class _CustomNavbarWidgetState extends State<CustomNavbarWidget> {
                               child: CustomProfileDisplayWidget(
                                 username: authData!['data']['username'],
                                 pictUrl: authData!['data']['avatar'],
+                                idUser: authData!['data']['id'].toString(),
                               ),
                             )
                           : Row(

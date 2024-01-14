@@ -11,6 +11,7 @@ class CustomCartItemWidget extends StatelessWidget {
   final String imgUrl;
   final VoidCallback removeQty;
   final VoidCallback addQty;
+  final VoidCallback removeItem;
   const CustomCartItemWidget({
     super.key,
     required this.name,
@@ -20,6 +21,7 @@ class CustomCartItemWidget extends StatelessWidget {
     required this.imgUrl,
     required this.removeQty,
     required this.addQty,
+    required this.removeItem,
   });
 
   @override
@@ -45,7 +47,7 @@ class CustomCartItemWidget extends StatelessWidget {
           ),
           const SizedBox(width: 20),
           SizedBox(
-            width: 250,
+            width: 270,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -109,6 +111,16 @@ class CustomCartItemWidget extends StatelessWidget {
                       height: 40,
                       color: darkBlueColor,
                     ),
+                    const Spacer(),
+                    CustomIconButtonWidget(
+                      onTap: removeItem,
+                      iconButton: Icons.delete_rounded,
+                      iconSize: 24,
+                      iconColor: whiteColor,
+                      width: 40,
+                      height: 40,
+                      color: Colors.red,
+                    )
                   ],
                 )
               ],

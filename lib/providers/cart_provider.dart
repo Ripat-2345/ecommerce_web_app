@@ -147,4 +147,33 @@ class CartProvider with ChangeNotifier {
       print(e);
     }
   }
+
+  Future deleteProductCart({
+    BuildContext? context,
+    String? idCart,
+  }) async {
+    try {
+      final dataUser = await readFromStorage('authData');
+      final token = jsonDecode(dataUser!)['token'];
+      final response = await http.delete(
+        Uri.parse("$baseUrl/carts/$idCart"),
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print("status: ${response.statusCode}");
+      print("body: ${response.body}");
+
+      if (response.statusCode == 401) {
+        await removeFromStorage('authData');
+        context!.goNamed('login');
+        snackBarInfo(context, jsonDecode(response.body)['message']);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }

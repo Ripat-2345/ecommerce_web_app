@@ -104,6 +104,12 @@ class _CartPageState extends State<CartPage> {
                               );
                               setState(() {});
                             },
+                            removeItem: () async {
+                              await cartProvider.deleteProductCart(
+                                idCart: data['id'].toString(),
+                              );
+                              setState(() {});
+                            },
                           );
                         }).toList(),
                       );
