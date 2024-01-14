@@ -158,6 +158,10 @@ class CustomProductWidget extends StatelessWidget {
                         "Berhasil Menambahkan!",
                       );
                     });
+                    await cartProvider.getCartsByIdUser(
+                      context: context,
+                      idUser: jsonDecode(data)['data']['id'].toString(),
+                    );
                   }
                 },
                 iconButton: Icons.add_shopping_cart_rounded,

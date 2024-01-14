@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthProvider>(create: (_) => AuthProvider()),
-        Provider<UserProvider>(create: (_) => UserProvider()),
         Provider<ProductProvider>(create: (_) => ProductProvider()),
+        Provider<AuthProvider>(create: (_) => AuthProvider()),
         Provider<CartProvider>(create: (_) => CartProvider()),
+        Provider<UserProvider>(create: (_) => UserProvider()),
         Provider<CommentProvider>(create: (_) => CommentProvider()),
       ],
       child: MaterialApp.router(

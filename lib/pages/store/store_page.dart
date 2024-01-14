@@ -571,6 +571,7 @@ class _StorePageState extends State<StorePage> {
                                         currentPasswordController.text,
                                     password: confirmPasswordController.text,
                                   );
+                                  setState(() {});
                                 } else {
                                   snackBarInfo(
                                     context,

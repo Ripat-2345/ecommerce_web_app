@@ -57,6 +57,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 Center(
                   child: CustomTextFieldWidget(
                     controller: emailController,
+                    obscureText: true,
                     title: "Your Email",
                   ),
                 ),

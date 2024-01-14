@@ -108,6 +108,8 @@ class AuthProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         snackBarInfo(context!, "Check Email Anda $email");
+      } else if (response.statusCode == 401) {
+        snackBarInfo(context!, "Email Anda Tidak Ditemukan!");
       }
     } catch (e) {
       print(e);

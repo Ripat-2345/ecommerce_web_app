@@ -74,6 +74,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   child: CustomTextFieldWidget(
                     controller: passwordController,
                     title: "Password",
+                    obscureText: true,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -81,6 +82,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   child: CustomTextFieldWidget(
                     controller: confirmPasswordController,
                     title: "Confirm Password",
+                    obscureText: true,
                   ),
                 ),
                 const SizedBox(height: 20),

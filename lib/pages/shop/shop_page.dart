@@ -2,13 +2,36 @@ import 'package:ecommerce_web_app/utils/theme_settings.dart';
 import 'package:ecommerce_web_app/widgets/custom_product_widget.dart';
 import 'package:flutter/material.dart';
 
-class ShopPage extends StatelessWidget {
+class ShopPage extends StatefulWidget {
   final List? dataProducts;
 
   const ShopPage({
     super.key,
     this.dataProducts,
   });
+
+  @override
+  State<ShopPage> createState() => _ShopPageState();
+}
+
+class _ShopPageState extends State<ShopPage> {
+  List? products;
+
+  void filterSearchResults(String query) {
+    setState(() {
+      products = widget.dataProducts!.where((item) {
+        return item['name'].toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      products = widget.dataProducts;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +58,9 @@ class ShopPage extends StatelessWidget {
                     height: 50,
                     width: 400,
                     child: TextField(
+                      onChanged: (value) {
+                        filterSearchResults(value);
+                      },
                       decoration: InputDecoration(
                         hintText: "Search here....",
                         filled: true,
@@ -64,14 +90,14 @@ class ShopPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 50),
-              dataProducts == null
+              widget.dataProducts == null
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : Wrap(
                       spacing: 20,
                       runSpacing: 20,
-                      children: dataProducts!.map(
+                      children: products!.reversed.map(
                         (data) {
                           return CustomProductWidget(
                             idProduct: data['id'].toString(),

@@ -7,6 +7,7 @@ import 'package:ecommerce_web_app/widgets/custom_filled_button_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_product_widget.dart';
 import 'package:ecommerce_web_app/widgets/custom_text_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   final List? dataProducts;
@@ -210,7 +211,9 @@ class HomePage extends StatelessWidget {
                 textButtonColor: whiteColor,
                 textButtonSize: 14,
                 textButtonFontWeight: FontWeight.w500,
-                onPressed: () {},
+                onPressed: () {
+                  context.goNamed('shop');
+                },
               )
             ],
           )

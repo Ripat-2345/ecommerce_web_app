@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ecommerce_web_app/pages/home/home_page.dart';
 import 'package:ecommerce_web_app/pages/shop/shop_page.dart';
+import 'package:ecommerce_web_app/pages/our_teams/our_teams_page.dart';
 import 'package:ecommerce_web_app/providers/product_provider.dart';
 import 'package:ecommerce_web_app/utils/shared_preferences_services.dart';
 import 'package:ecommerce_web_app/utils/theme_settings.dart';
@@ -52,6 +53,10 @@ class _CustomNavbarWidgetState extends State<CustomNavbarWidget> {
         } else if (widget.page == 'shop') {
           setState(() {
             selectedContent = ShopPage(dataProducts: dataProducts!);
+          });
+        } else if (widget.page == 'our-teams') {
+          setState(() {
+            selectedContent = OurTeamsPage();
           });
         }
       });
@@ -149,7 +154,12 @@ class _CustomNavbarWidgetState extends State<CustomNavbarWidget> {
                             textSize: 16,
                             textWeight: FontWeight.w200,
                             overlayColor: blueColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                selectedContent = OurTeamsPage();
+                                titlePage = "Our Teams";
+                              });
+                            },
                           ),
                         ],
                       ),
